@@ -1,0 +1,762 @@
+#:kivy 1.9.1
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+WindowManager:
+    transition: NoTransition()
+    MainWindow:
+    ScientificMode:
+    SecondWindow:
+
+<MainWindow>:
+    name: "first"
+
+    StackLayout:
+        id: MainStackLayout
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            size_hint: 1, 0.1
+
+            BoxLayout:
+                id: HeaderBoxLayout
+                orientation: "horizontal"
+                canvas.before:
+                    Color:
+                        rgba: (0.13, 0.13, 0.13, 1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                AnchorLayout:
+                    anchor_x: "left"
+                    ImageButton:
+                        size_hint: None, 0.65
+                        width: HeaderBoxLayout.height
+                        background_color: 0, 0, 0, 0
+                        source: "images/change_mode_white.png"
+                        pos_hint: {"center_y": 0.5}
+                        on_release:
+                            app.root.current = "ScientificModeWindow"
+                Label:
+                    text: "calc"
+                    font_size: self.height / 2.3
+                    color: eval(root.text_color)
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                AnchorLayout:
+                    anchor_x: "right"
+                    ImageButton:
+                        size_hint: None, 0.8
+                        width: HeaderBoxLayout.height
+                        background_color: 0, 0, 0, 0
+                        source: "images/menu.png"
+                        pos_hint: {"center_y": 0.5}
+                        on_press:
+                            app.root.current = "second"
+                            root.manager.transition =  NoTransition()
+
+        AnchorLayout:
+            id: Display
+            anchor_x: "center"
+            anchor_y: "top"
+            size_hint: 1, 0.25
+
+            BoxLayout:
+                id: DisplayBoxLayout
+                orientation: "horizontal"
+
+                canvas.before:
+                    Color:
+                        rgba: (0.2, 0.2, 0.2, 1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                ImageToggleButton:
+                    id: History_bttn
+                    source: "images/history white.png"
+                    background_color: 0, 0, 0, 0
+                    size_hint: None, None
+                    width: DisplayBoxLayout.height/5
+                    height: DisplayBoxLayout.height/5
+                    on_state:
+                        root.show_history(self.state)
+                
+                BoxLayout:
+                    id: Result_display
+                    orientation: "vertical"
+                    size: root.size
+                    Label:
+                        id: Result
+                        text: str(root.display)
+                        font_size: self.height / (1.5 + len(root.display)/(root.width/40))
+                        size_hint: 1, 1
+                        font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+                    Label:
+                        id: result_preview
+                        text: root.result_preview
+                        font_size: self.height / (1 + len(root.display)/(root.width/40))
+                        size_hint: 1, 0.2
+                        font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+
+        GridLayout:
+            cols: 4
+            rows: 5
+            row_force_default: True
+            row_default_height: (self.height-(Display.height+HeaderBoxLayout.height))/5
+            Button:
+                id: cancel_bttn
+                font_size: self.height/3
+                on_press: root.cancel_bttn()
+                background_color: 0, 0, 0, 0
+                col: 1
+                row: 1
+                text: "C"
+            Button:
+                id: cancel_bttn
+                font_size: self.height/3
+                on_press: root.change_symbol()
+                background_color: 0, 0, 0, 0
+                col: 2
+                row: 2
+                text: "+/-"
+            ImageButton:
+                id: backspace_bttn
+                source: root.backspace_img
+                on_press: root.backspace_bttn()
+                col:3
+                row:1
+            Button:
+                id: divide_bttn
+                font_size: self.height/3
+                on_press: root.divide_bttn()
+                background_color: 0, 0, 0, 0
+                col: 4
+                row: 1
+                text: "÷"
+                color: (1, 0.2, 0.2, 1)
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 1
+                row: 2
+                text: "7"
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 2
+                row: 2
+                text: "8"
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 3
+                row: 2
+                text: "9"
+            Button:
+                id: multiply_bttn
+                font_size: self.height/3
+                on_press: root.multiply_bttn()
+                background_color: 0, 0, 0, 0
+                col: 4
+                row: 2
+                text: "×"
+                color: (1, 0.2, 0.2, 1)
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 1
+                row: 3
+                text: "4"
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 2
+                row: 3
+                text: "5"
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 3
+                row: 3
+                text: "6"
+            Button:
+                id: diff_bttn
+                font_size: self.height/2
+                on_press: root.diff_bttn()
+                background_color: 0, 0, 0, 0
+                col: 4
+                row: 3
+                text: "-"
+                color: (1, 0.2, 0.2, 1)
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 1
+                row: 4
+                text: "1"
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 2
+                row: 4
+                text: "2"
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 3
+                row: 4
+                text: "3"
+            Button:
+                id: sum_bttn
+                font_size: self.height/3
+                on_press: root.sum_bttn()
+                background_color: 0, 0, 0, 0
+                col: 4
+                row: 4
+                text:"+"
+                color: (1, 0.2, 0.2, 1)
+            Button:
+                id: sum_bttn
+                font_size: self.height/3
+                on_press: root.sum_bttn()
+                background_color: 0, 0, 0, 0
+                col: 4
+                row: 4
+                text:"%"
+                color: (1, 0.2, 0.2, 1)
+            Button:
+                id: num_bttn
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                font_size: self.height/3
+                on_press: root.button_click(eval(self.text))
+                background_color: 0, 0, 0, 0
+                col: 2
+                row: 5
+                text: "0"
+            Button:
+                id: point_bttn
+                font_size: self.height/3
+                on_press: root.add_point_bttn()
+                background_color: 0, 0, 0, 0
+                col: 3
+                row: 5
+                text: ","
+            Button:
+                canvas.before:
+                    Color:
+                        rgb: (1, 0.2, 0.2, 1)
+                    Ellipse:
+                        pos: self.pos[0]+self.width/2-self.height/4, self.pos[1]+self.height/4
+                        size: self.height/2, self.height/2
+                id: equal_bttn
+                font_size: self.height/3
+                on_press: root.equal_bttn()
+                background_color: 0, 0, 0, 0
+                col: 4
+                row: 5
+                text: "="
+                color: eval(root.text_color)
+
+<ScientificMode>:
+    name: "ScientificModeWindow"
+
+
+    StackLayout:
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            size_hint: 1, 0.1
+
+            BoxLayout:
+                id: HeaderBoxLayout
+                orientation: "horizontal"
+                canvas.before:
+                    Color:
+                        rgba: (0.13, 0.13, 0.13, 1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                ImageButton:
+                    size_hint: None, 0.65
+                    width: HeaderBoxLayout.height
+                    background_color: 0, 0, 0, 0
+                    source: "images/change_mode_white.png"
+                    pos_hint: {"center_y": 0.5}
+                    on_release:
+                        app.root.current = "first"
+
+                Label:
+                    text: "scientific calc"
+                    font_size: self.height / 2.3
+                    color: eval(root.text_color)
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                ImageButton:
+                    size_hint: None, 0.8
+                    width: HeaderBoxLayout.height
+                    background_color: 0, 0, 0, 0
+                    source: "images/menu.png"
+                    pos_hint: {"center_y": 0.5}
+                    on_press:
+                        app.root.current = "second"
+                        root.manager.transition.direction = "left"
+
+
+        AnchorLayout:
+            id: Display
+            anchor_x: "center"
+            anchor_y: "top"
+            size_hint: 1, 0.25
+
+            BoxLayout:
+                id: DisplayBoxLayout
+                orientation: "horizontal"
+
+                canvas.before:
+                    Color:
+                        rgba: (0.2, 0.2, 0.2, 1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                ImageToggleButton:
+                    id: History_bttn
+                    source: "images/history white.png"
+                    background_color: 0, 0, 0, 0
+                    size_hint: None, None
+                    width: DisplayBoxLayout.height/5
+                    height: DisplayBoxLayout.height/5
+                    on_state:
+                        root.show_history(self.state)
+                
+                BoxLayout:
+                    id: Result_display
+                    orientation: "vertical"
+                    size: root.size
+                    Label:
+                        id: Result
+                        text: str(root.display)
+                        font_size: self.height / (1.5 + len(root.display)/(root.width/40))
+                        size_hint: 1, 1
+                        font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+                    Label:
+                        id: result_preview
+                        text: root.result_preview
+                        font_size: self.height / (1 + len(root.display)/(root.width/40))
+                        size_hint: 1, 0.2
+                        font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+
+        StackLayout:
+            size_hint: None, None
+            width: root.width
+            height: (root.height-(Display.height+HeaderBoxLayout.height))
+            GridLayout:
+                id: Buttons
+                cols: 4
+                rows: 7
+                row_force_default: True
+                row_default_height: (self.parent.height)/7
+                # ---------------------------- FIRST ROW
+                Button:
+                    id: shift_bttn
+                    font_size: self.height/3
+                    on_press: root.shift_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 1
+                    row: 1
+                    markup: True
+                    text: "SHIFT"
+                    canvas.before:
+                        Color:
+                            rgba: (0.1, 0.2, 1, 1) # ------------ QUANDO CLICCATO DEVE CAMBIARE COLORE
+                        Rectangle:
+                            size: self.width, self.height
+                            pos: self.pos
+                Button:
+                    id: poweroftwo_bttn
+                    font_size: self.height/3
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 2
+                    row: 1
+                    markup: True
+                    text: "x[sup]2[/sup]"
+                    on_release: root.poweroftwo_bttn()
+                    canvas.before:
+                        Color:
+                            rgba: (1, 0.2, 0.2, 1)
+                        Rectangle:
+                            size: self.width, self.height
+                            pos: self.pos
+                Button:
+                    id: sqrt_bttn
+                    font_size: self.height/3
+                    on_press: root.sqrt_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 3
+                    row: 1
+                    text: "√x"
+                    canvas.before:
+                        Color:
+                            rgba: (1, 0.2, 0.2, 1)
+                        Rectangle:
+                            size: self.width, self.height
+                            pos: self.pos
+                Button:
+                    id: log_bttn
+                    font_size: self.height/3
+                    on_press: root.log_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 4
+                    row: 1
+                    text: "log"
+                    canvas.before:
+                        Color:
+                            rgba: (1, 0.2, 0.2, 1)
+                        Rectangle:
+                            size: self.width, self.height
+                            pos: self.pos
+                    # ---------------------------- SECOND ROW
+                Button:
+                    id: inverse_bttn
+                    font_size: self.height/3
+                    on_press: root.inverse_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 1
+                    row: 2
+                    markup: True
+                    text: "x[sup]-1[/sup]"
+                    canvas.before:
+                        Color:
+                            rgba: (1, 0.2, 0.2, 1)
+                        Rectangle:
+                            size: self.width, self.height
+                            pos: self.pos
+                Button:
+                    id: sin_bttn
+                    font_size: self.height/3
+                    on_press: root.sin_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 2
+                    row: 2
+                    text: "sin"
+                    canvas.before:
+                        Color:
+                            rgba: (1, 0.2, 0.2, 1)
+                        Rectangle:
+                            size: self.width*4, self.height
+                            pos: self.pos
+                Button:
+                    id: cos_bttn
+                    font_size: self.height/3
+                    on_press: root.cos_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 3
+                    row: 2
+                    text: "cos"
+                Button:
+                    id: tan_bttn
+                    font_size: self.height/3
+                    on_press: root.tan_bttn()
+                    background_color:  0, 0, 0, 0
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                    col: 4
+                    row: 2
+                    text: "tan"
+                 # ---------------------------- THIRD ROW
+                Button:
+                    id: cancel_bttn
+                    font_size: self.height/2.3
+                    on_press: root.cancel_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 1
+                    row: 3
+                    text: "C"
+                BoxLayout:
+                    orientation: "horizontal"
+                    col: 2
+                    row: 3
+                    Button:
+                        id: open_brackets_bttn
+                        font_size: self.height/2.3
+                        on_press: root.open_brackets_bttn()
+                        background_color: 0, 0, 0, 0
+                        text: "("
+                        color: (1, 0.2, 0.2, 1)
+                    Button:
+                        id: close_brackets_bttn
+                        font_size: self.height/2.3
+                        on_press: root.close_brackets_bttn()
+                        background_color: 0, 0, 0, 0
+                        text: ")"
+                        color: (1, 0.2, 0.2, 1)
+                ImageButton:
+                    id: backspace_bttn
+                    source: root.backspace_img
+                    on_press: root.backspace_bttn()
+                    col:3
+                    row:3
+                Button:
+                    id: divide_bttn
+                    font_size: self.height/2
+                    on_press: root.divide_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 4
+                    row: 3
+                    text: "÷"
+                    color: (1, 0.2, 0.2, 1)
+
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 1
+                    row: 4
+                    text: "7"
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 2
+                    row: 4
+                    text: "8"
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 3
+                    row: 4
+                    text: "9"
+                Button:
+                    id: multiply_bttn
+                    font_size: self.height/2
+                    on_press: root.multiply_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 4
+                    row: 4
+                    text: "×"
+                    color: (1, 0.2, 0.2, 1)
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 1
+                    row: 5
+                    text: "4"
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 2
+                    row: 5
+                    text: "5"
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 3
+                    row: 5
+                    text: "6"
+                Button:
+                    id: diff_bttn
+                    font_size: self.height/1.5
+                    on_press: root.diff_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 4
+                    row: 5
+                    text: "-"
+                    color: (1, 0.2, 0.2, 1)
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 1
+                    row: 6
+                    text: "1"
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 2
+                    row: 6
+                    text: "2"
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 3
+                    row: 6
+                    text: "3"
+                Button:
+                    id: sum_bttn
+                    font_size: self.height/2.3
+                    on_press: root.sum_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 4
+                    row: 6
+                    text:"+"
+                    color: (1, 0.2, 0.2, 1)
+                Button:
+                    id: sum_bttn
+                    font_size: self.height/2.3
+                    on_press: root.sum_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 1
+                    row: 7
+                    text:"%"
+                    color: (1, 0.2, 0.2, 1)
+                Button:
+                    id: num_bttn
+                    font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+
+                    font_size: self.height/2.3
+                    on_press: root.button_click(eval(self.text))
+                    background_color: 0, 0, 0, 0
+                    col: 2
+                    row: 7
+                    text: "0"
+                Button:
+                    id: point_bttn
+                    font_size: self.height/2.3
+                    on_press: root.add_point_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 3
+                    row: 7
+                    text: ","
+                Button:
+                    canvas.before:
+                        Color:
+                            rgb: (1, 0.2, 0.2, 1)
+                        Ellipse:
+                            pos: self.pos[0]+self.width/2-self.height/4, self.pos[1]+self.height/4
+                            size: self.height/2, self.height/2
+                    id: equal_bttn
+                    font_size: self.height/2
+                    on_press: root.equal_bttn()
+                    background_color: 0, 0, 0, 0
+                    col: 4
+                    row: 7
+                    text: "="
+                    color: eval(root.text_color)
+
+                
+<SecondWindow>:
+    name: "second"
+    # header
+    StackLayout:
+        orientation: "lr-tb"
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 0.1
+            canvas.before:
+                Color:
+                    rgba: (0.2, 0.2, 0.2, 1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            ImageButton:
+                pos_hint: {"center_y": 0.5}
+                size_hint: 0.2, 0.7
+                source: "images/white-back-icon-back-arrow-icon-white-text-number-symbol-alphabet-transparent-png-2608792.png"
+                background_color: 0, 0, 0, 0
+                on_press:
+                    app.root.current = "first"
+                    root.manager.transition.direction = "right"
+
+            Label:
+                text: "settings"
+                font_name: "fonts/mustica_pro/MusticaPro-SemiBold.otf"
+                font_size: self.height/2
+
+            ImageButton:
+                source: "images/logo-removebg.png"
+                size_hint: 0.2, 1
+                on_release: root.open_website()
+
+        # settings
+        AnchorLayout:
+            anchor_y: "top"
+            StackLayout:
+                orientation: "lr-tb"
